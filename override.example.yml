@@ -1,0 +1,33 @@
+#version: '3.7'
+#
+#services:
+#  gitea:
+#    container_name: gitea
+#    ports:
+#      - "222:22"
+#    networks:
+#      - proxy
+#    labels:
+#      - traefik.http.routers.gitea-http.rule=Host(`gitea.example.com`)
+#      - traefik.http.routers.gitea-http.entrypoints=http
+#      - traefik.http.routers.gitea-http.middlewares=redirect
+#      - traefik.http.routers.gitea-https.rule=Host(`gitea.example.com`)
+#      - traefik.http.routers.gitea-https.entrypoints=https
+#      - traefik.http.routers.gitea-https.tls=true
+#      - traefik.http.routers.gitea-https.tls.certresolver=letsencrypt
+#      - traefik.http.services.gitea.loadbalancer.server.port=3000
+#      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
+#  postgresql:
+#    container_name: gitea-db
+#
+#networks:
+#  proxy:
+#    external: true
+#  gitea:
+#    name: gitea
+#
+#volumes:
+#  gitea-vol:
+#    name: gitea
+#  postgresql-vol:
+#    name: gitea-db

@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  gitea:
+    image: gitea/gitea:1
+    restart: unless-stopped
+    depends_on:
+      - postgresql
+    networks:
+      - gitea
+    volumes:
+      - gitea-vol:/data
+  postgresql:
+    image: postgres:12
+    restart: unless-stopped
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
+    networks:
+      - gitea
+    volumes:
+      - postgresql-vol:/var/lib/postgresql/data
+
+networks:
+  gitea:
+    external: false
+
+volumes:
+  gitea-vol:
+  postgresql-vol:
