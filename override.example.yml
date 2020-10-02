@@ -1,33 +1,42 @@
-#version: '3.7'
-#
-#services:
-#  gitea:
-#    container_name: gitea
-#    ports:
-#      - "222:22"
-#    networks:
-#      - proxy
-#    labels:
-#      - traefik.http.routers.gitea-http.rule=Host(`gitea.example.com`)
-#      - traefik.http.routers.gitea-http.entrypoints=http
-#      - traefik.http.routers.gitea-http.middlewares=redirect
-#      - traefik.http.routers.gitea-https.rule=Host(`gitea.example.com`)
-#      - traefik.http.routers.gitea-https.entrypoints=https
-#      - traefik.http.routers.gitea-https.tls=true
-#      - traefik.http.routers.gitea-https.tls.certresolver=letsencrypt
-#      - traefik.http.services.gitea.loadbalancer.server.port=3000
-#      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
-#  postgresql:
-#    container_name: gitea-db
-#
-#networks:
-#  proxy:
-#    external: true
-#  gitea:
-#    name: gitea
-#
-#volumes:
-#  gitea-vol:
-#    name: gitea
-#  postgresql-vol:
-#    name: gitea-db
+version: '3.7'
+
+services:
+  # Service Configuration
+  # Overwrite or add configuration values to the docker-compose deployment
+  gitea:
+    container_name: gitea # Remove if using multiple instances
+    # If Traefik is not used, ports can be published by using the section below
+    # to make the Gitea instance available, e.g.:
+    #ports:
+    #  - "3000:3000"
+    ports:
+      - "222:22" # Used for SSH cloning
+    networks:
+      - proxy # Remove if Traefik is not used
+    labels:
+      # Traefik configuration for Gitea, hostnames need to be changed
+      - traefik.http.routers.gitea-http.rule=Host(`gitea.example.com`)
+      - traefik.http.routers.gitea-http.entrypoints=http
+      - traefik.http.routers.gitea-http.middlewares=redirect
+      - traefik.http.routers.gitea-https.rule=Host(`gitea.example.com`)
+      - traefik.http.routers.gitea-https.entrypoints=https
+      - traefik.http.routers.gitea-https.tls=true
+      - traefik.http.routers.gitea-https.tls.certresolver=letsencrypt
+      - traefik.http.services.gitea.loadbalancer.server.port=3000
+      - traefik.http.middlewares.redirect.redirectscheme.scheme=https
+  postgresql:
+    container_name: gitea-db # Remove if using multiple instances
+
+networks:
+  # The proxy network is used by Traefik to discover and connect the HTTP services
+  proxy:
+    external: true # Remove if you're not using Traefik
+  gitea:
+    name: gitea
+
+# Change the volume configuration as needed, e.g. configure NFS volumes
+volumes:
+  gitea-vol:
+    name: gitea
+  postgresql-vol:
+    name: gitea-db
